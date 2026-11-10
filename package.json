@@ -1,23 +1,20 @@
 {
-  "name": "fastcash_app",
+  "name": "cashloan",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "CashLoan Instant Loan App",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "type": "commonjs",
   "dependencies": {
-    "@capacitor/android": "^8.6.0",
-    "@capacitor/cli": "^8.6.0",
-    "@capacitor/core": "^8.6.0",
-    "dotenv": "^18.0.10",
-    "express": "^5.3.0",
-    "express-rate-limit": "^8.7.4",
-    "helmet": "^8.3.0",
-    "multer": "^2.5.0",
-    "socket.io": "^4.8.4",
-    "web-push": "^4.0.0"
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.7",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
   }
 }
