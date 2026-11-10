@@ -181,7 +181,17 @@ async function login() {
   }
 }
 
+function logout() {
+  localStorage.removeItem('loan_user');
+  location.reload();
+}
+
 async function loadUserData() {
+  if (!currentUser) {
+    document.getElementById('registerScreen').classList.remove('hidden');
+    return;
+  }
+
   document.getElementById('registerScreen').classList.add('hidden');
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('homeScreen').classList.remove('hidden');
@@ -202,9 +212,9 @@ async function loadUserData() {
   // Load Notifications
   const notiContainer = document.getElementById('notificationFeed');
   if (notiContainer) {
-    if (data.notifications.length === 0) {
+    if (data.notifications && data.notifications.length === 0) {
       notiContainer.innerHTML = '<div class="empty-state" style="text-align:center; padding:20px; color:#94a3b8;">কোনো নোটিফিকেশন নেই</div>';
-    } else {
+    } else if (data.notifications) {
       notiContainer.innerHTML = data.notifications.reverse().map(n => `
         <div class="feed-item-animated" style="padding:15px; background:#f8fafc; border-radius:12px; margin-bottom:10px; border:1px solid #e2e8f0;">
           <div class="feed-item-left">
@@ -242,6 +252,11 @@ async function loadUserData() {
 }
 
 function showPage(pageId) {
+  if (!currentUser && pageId !== 'registerScreen' && pageId !== 'loginScreen') {
+    document.getElementById('registerScreen').classList.remove('hidden');
+    return;
+  }
+
   document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
   document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
   
@@ -278,6 +293,7 @@ async function updateProfile() {
   } else showAlert('এরর!', 'আপডেট ফেইল হয়েছে', 'error');
 }
 
+// 5 Step Logic
 function goToStep(step) {
   if (step === 2) {
     const amount = parseFloat(document.getElementById('loanAmount').value);
@@ -411,47 +427,4 @@ async function submitWithdraw() {
   } else {
     showAlert('এরর!', data.error, 'error');
   }
-}
-
-// --- OTP Functions ---
-function showOtpScreen() {
-  const name = document.getElementById('regName').value;
-  const phone = document.getElementById('regPhone').value;
-  const password = document.getElementById('regPassword').value;
-  
-  if (!name || !phone || !password) return showAlert('এরর!', 'সব তথ্য দিন', 'error');
-  
-  // Show OTP Screen
-  document.getElementById('registerScreen').classList.add('hidden');
-  document.getElementById('otpScreen').classList.remove('hidden');
-  
-  // Auto-fill OTP for demo (In real app, this would come from SMS)
-  setTimeout(() => {
-    showAlert('OTP পাঠানো হয়েছে!', 'ডেমো OTP: 1234', 'success');
-  }, 500);
-  
-  // Move cursor to next input automatically
-  const inputs = document.querySelectorAll('#otpScreen input');
-  inputs.forEach((input, index) => {
-    input.addEventListener('input', () => {
-      if (input.value.length === 1 && index < inputs.length - 1) {
-        inputs[index + 1].focus();
-      }
-    });
-  });
-}
-
-async function verifyOtp() {
-  const otp1 = document.getElementById('otp1').value;
-  const otp2 = document.getElementById('otp2').value;
-  const otp3 = document.getElementById('otp3').value;
-  const otp4 = document.getElementById('otp4').value;
-  
-  const otp = otp1 + otp2 + otp3 + otp4;
-  
-  // For demo, accept any 4 digit OTP
-  if (otp.length !== 4) return showAlert('এরর!', '৪ ডিজিটের OTP দিন', 'error');
-  
-  // Now proceed to register
-  await register();
 }
